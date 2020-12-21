@@ -10,7 +10,9 @@ import Typewriter from 'typewriter-effect';
 import ScrollAnimation from 'react-animate-on-scroll';
 import { SocialIcon } from 'react-social-icons';
 import "./Player.css";
-
+import Draggable from 'react-draggable'; // The default
+//import {DraggableCore} from 'react-draggable'; // <DraggableCore>
+//import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
 
 import "animate.css/animate.min.css";
 
@@ -26,7 +28,8 @@ function change(theid){
 //Spotify Client ID
 const clientId = "96971f2e67904bae87bdaa0b2190d29c";
 //Spotify Client ID
-
+//let Draggable = require('react-draggable');
+//let DraggableCore = Draggable.DraggableCore;
 class App extends Component {
   constructor() {
     super();
@@ -254,14 +257,20 @@ class App extends Component {
               <br/>  
               <div className="picbox"> 
               <div className="pics">
+
       
               {this.state.pictures.map(long =>(
+                              <Draggable>
+
                       <img src={long} alt="Artist #1"></img>
+                      </Draggable>
+
               ))}
+
               </div>
               </div>
               </ScrollAnimation>
-
+            
           </div>)}
         </header>
       </div>
