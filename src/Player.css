@@ -28,10 +28,23 @@
     border-top-right-radius: 80px;
     padding-bottom: 2%;
 }
-.pics{
-    width: 1000px;
-    height: 1000px; 
+
+@media screen and (max-width: 400px){
+    .pics{
+        width: 100px;
+        height: 100px; 
+        border-radius: 25px;
+    }
 }
+@media screen and (max-width: 1000px){
+    .pics{
+        width: 500px;
+        height: 500px; 
+        border-radius: 50%;
+
+    }
+}
+
 
 .table_left{
     text-align: center;

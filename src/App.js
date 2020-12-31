@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import * as $ from "jquery";
 import { authEndpoint, redirectUri, scopes } from "./config";
@@ -13,6 +13,16 @@ import "./Player.css";
 import Draggable from 'react-draggable'; // The default
 //import {DraggableCore} from 'react-draggable'; // <DraggableCore>
 //import Draggable, {DraggableCore} from 'react-draggable'; // Both at the same time
+//import { PhotoshopPicker  } from 'react-color'
+//import { IconButton } from '@material-ui/core';
+import { SketchPicker } from 'react-color'
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import RubberSlider from "@shwilliam/react-rubber-slider";
+
+import "@shwilliam/react-rubber-slider/dist/styles.css";
+//import "./styles.css";
+
 
 import "animate.css/animate.min.css";
 
@@ -34,10 +44,14 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      background: '#20b8aa',
       token: null,
       pic: null,
+      setValue: "50",
       artists: [],
       pictures: [],
+      pictures2: [],
+      pictures3: [],
       is_playing: "Paused",
       progress_ms: 0,
       no_data: false,
@@ -46,7 +60,7 @@ class App extends Component {
       song_uri: null,
       song_recc: null,
       artist_recc: null,
-      selectValue: "long_term",
+      selectValue: null,
     };
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
     this.getCurrentlyPlaying = this.getCurrentlyPlaying.bind(this);
@@ -55,8 +69,16 @@ class App extends Component {
 
   handleDropdownChange(e) {
     this.setState({ selectValue: e.target.value });
-    this.getArtists();
   }
+
+  handleChangeComplete = (color) => {
+    this.setState({ background: color.hex });
+  };
+
+  setValue = (value) =>{
+    this.setState({setValue: Number(value)})
+  }
+
 
   componentDidMount() {
     let _token = hash.access_token;
@@ -115,7 +137,8 @@ class App extends Component {
         let empty_list = [];
         let pic_list = [];
         let j;
-        for (j=0; j< 12; j++){
+        console.log(list[0][1])
+        for (j=0; j< 20; j++){
           empty_list.push(list[0][1][j]["genres"]);
           pic_list.push(list[0][1][j]["images"][0]["url"])
         }
@@ -151,7 +174,7 @@ class App extends Component {
         let empty_list = [];
         let pic_list = [];
         let j;
-        for (j=0; j< 12; j++){
+        for (j=0; j< 20; j++){
           empty_list.push(list[0][1][j]["genres"]);
           pic_list.push(list[0][1][j]["images"][0]["url"])
         }
@@ -161,7 +184,43 @@ class App extends Component {
       }    
         this.setState({
           artists: merged,
-          pictures: pic_list
+          pictures2: pic_list
+        });
+        let holder = find_liked(this.state.artists);
+        this.setState({
+          song_recc: holder[0],
+          artist_recc: holder[1],
+        });
+      }
+    })
+    $.ajax({
+      url: "https://api.spotify.com/v1/me/top/artists?time_range="+"medium_term",
+      type: "get",
+      beforeSend: xhr => {
+        xhr.setRequestHeader("Authorization", "Bearer " + token);
+      },
+      success: data => {
+        if(!data) {
+          this.setState({
+            no_data: true,
+          });
+          return;
+        }
+        const list = Object.entries(data);
+        let empty_list = [];
+        let pic_list = [];
+        let j;
+        for (j=0; j< 20; j++){
+          empty_list.push(list[0][1][j]["genres"]);
+          pic_list.push(list[0][1][j]["images"][0]["url"])
+        }
+        let merged = [].concat.apply([], empty_list);
+        for(var i = 1 ; i < merged.length ; i++){
+          merged[i] = merged[i].charAt(0).toUpperCase() + merged[i].substr(1);
+      }    
+        this.setState({
+          artists: merged,
+          pictures3: pic_list
         });
         let holder = find_liked(this.state.artists);
         this.setState({
@@ -176,7 +235,8 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      
+      <div className="App" style={{backgroundColor: this.state.background, height: "100%", width: "100%"}}>
         <header className="App-header">
           <div className="pink"> 
           <br/>
@@ -186,15 +246,11 @@ class App extends Component {
           <br/>
 
           {!this.state.token &&(
-            <h2 className="header">Japanify</h2>
+            <h2 className="header">Collages</h2>
           )}
           {!this.state.token &&(
             <div>
-           <Typewriter options={{
-            strings: ['Discover New Japanese Artists 🎨', 'Discover New Japanese Music 🎶'],
-            autoStart: true,
-            loop: true,
-           }}/>
+           <p>Create beautiful collages via spotify</p>
             <br/>
             <a className="btn btn--loginApp-link"
               href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join("%20")}&response_type=token&show_dialog=false`}>
@@ -204,7 +260,6 @@ class App extends Component {
             <br/>
             <div id="bar"></div>
             <br></br>
-            <p>Don't have a Spotify account?<br/>check out a random recommendation</p>
             <br/>
            </div>
           )}
@@ -229,7 +284,10 @@ class App extends Component {
               </h1>
               <br/>
               <h2>
-                Let's Japanify your music!
+                Let's create some collages!
+              </h2>
+              <h2>
+                Select a color to begin
               </h2>
               </div>
               <br/>
@@ -242,36 +300,50 @@ class App extends Component {
                 <div className='pulse'></div>
                 </div>
                 </div>
+                {this.state.token &&(
+                <div style={{}}>
+                  <SketchPicker
+                  color={ this.state.background }
+                  onChangeComplete={ this.handleChangeComplete }
+                />
+               
+                
+                  
+                    
+                <RubberSlider width={250} value={this.state.setValue} onChange={this.setValue} />   
+                <p>{this.state.setValue}</p>
+                </div>
+              
+                )}
                 </ScrollAnimation>
               <br/>  
+            
               <select id="dropdown" onChange={this.handleDropdownChange}>
-              <option value="long_term">long_term</option>
-              <option value="medium_term">medium_term</option>
-              <option value="short_term">short_term</option>
+              <option value={this.state.pictures}>long_term</option>
+              <option value={this.state.pictures3}>medium_term</option>
+              <option value={this.state.pictures2}>short_term</option>
             </select>
-            <div>Selected value is : {this.state.selectValue}</div>
+
+            
+            {this.state.selectValue != null &&(
 
               <ScrollAnimation animateIn='fadeIn' animateOut='flipOutY' scrollableParentSelector='#root' animateOnce={true}>
            
+              <br/> 
+            <div className="pics" style={{}}>
 
-              <br/>  
-              <div className="picbox"> 
-              <div className="pics">
-
-      
-              {this.state.pictures.map(long =>(
-                              <Draggable>
-
-                      <img src={long} alt="Artist #1"></img>
+              {this.state.selectValue.split(",").map(long =>(
+                      <Draggable>
+                      <img src={long} style={{borderRadius: this.state.setValue}} alt="Artist #1"></img>
                       </Draggable>
-
               ))}
+              </div>
 
-              </div>
-              </div>
               </ScrollAnimation>
-            
+              
+              )}
           </div>)}
+
         </header>
       </div>
     );
