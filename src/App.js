@@ -194,7 +194,7 @@ class App extends Component {
       }
     })
     $.ajax({
-      url: "https://api.spotify.com/v1/me/top/artists?time_range="+"medium_term",
+      url: "https://api.spotify.com/v1/me/top/artists?time_range="+"long_term",
       type: "get",
       beforeSend: xhr => {
         xhr.setRequestHeader("Authorization", "Bearer " + token);
