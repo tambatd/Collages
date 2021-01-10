@@ -145,20 +145,20 @@ class App extends Component {
           return;
         }
         const list = Object.entries(data);
-        let empty_list = [];
+      //  let empty_list = [];
         let pic_list = [];
         let j;
         //console.log(list[0][1])
         for (j=0; j< 20; j++){
-          empty_list.push(list[0][1][j]["genres"]);
+         // empty_list.push(list[0][1][j]["genres"]);
           pic_list.push(list[0][1][j]["images"][0]["url"])
         }
-        let merged = [].concat.apply([], empty_list);
-        for(var i = 1 ; i < merged.length ; i++){
-          merged[i] = merged[i].charAt(0).toUpperCase() + merged[i].substr(1);
-      }    
+        //let merged = [].concat.apply([], empty_list);
+        //for(var i = 1 ; i < merged.length ; i++){
+         // merged[i] = merged[i].charAt(0).toUpperCase() + merged[i].substr(1);
+    //  }    
         this.setState({
-          artists: merged,
+         // artists: merged,
           pictures: pic_list
         });
         //let holder = find_liked(this.state.artists);
@@ -187,15 +187,15 @@ class App extends Component {
         let pic_list = [];
         let j;
         for (j=0; j< 20; j++){
-          empty_list.push(list[0][1][j]["genres"]);
+          //empty_list.push(list[0][1][j]["genres"]);
           pic_list.push(list[0][1][j]["images"][0]["url"])
         }
-        let merged = [].concat.apply([], empty_list);
-        for(var i = 1 ; i < merged.length ; i++){
-          merged[i] = merged[i].charAt(0).toUpperCase() + merged[i].substr(1);
-      }    
+        //let merged = [].concat.apply([], empty_list);
+      //  for(var i = 1 ; i < merged.length ; i++){
+          //merged[i] = merged[i].charAt(0).toUpperCase() + merged[i].substr(1);
+     // }    
         this.setState({
-          artists: merged,
+         // artists: merged,
           pictures2: pic_list
         });
         //let holder = find_liked(this.state.artists);
@@ -220,19 +220,19 @@ class App extends Component {
           return;
         }
         const list = Object.entries(data);
-        let empty_list = [];
+        //let empty_list = [];
         let pic_list = [];
         let j;
         for (j=0; j< 20; j++){
-          empty_list.push(list[0][1][j]["genres"]);
+         // empty_list.push(list[0][1][j]["genres"]);
           pic_list.push(list[0][1][j]["images"][0]["url"])
         }
-        let merged = [].concat.apply([], empty_list);
-        for(var i = 1 ; i < merged.length ; i++){
-          merged[i] = merged[i].charAt(0).toUpperCase() + merged[i].substr(1);
-      }    
+       // let merged = [].concat.apply([], empty_list);
+       // for(var i = 1 ; i < merged.length ; i++){
+        //  merged[i] = merged[i].charAt(0).toUpperCase() + merged[i].substr(1);
+     // }    
         this.setState({
-          artists: merged,
+         // artists: merged,
           pictures3: pic_list
         });
         //let holder = find_liked(this.state.artists);
