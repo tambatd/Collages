@@ -167,7 +167,7 @@ class App extends Component {
           //artist_recc: holder[1],
         });
       }
-    })}catch(error){console.error(error);}
+    })}catch(error){console.log(error);}
     try{
     $.ajax({
       url: "https://api.spotify.com/v1/me/top/artists?time_range="+"short_term",
@@ -204,7 +204,7 @@ class App extends Component {
          // artist_recc: holder[1],
         });
       }
-    })}catch(error){console.error(error);}
+    })}catch(error){console.log(error);}
     try{
     $.ajax({
       url: "https://api.spotify.com/v1/me/top/artists?time_range="+"medium_term",
@@ -241,7 +241,7 @@ class App extends Component {
          // artist_recc: holder[1],
         });
       }
-    })}catch(error){console.error(error);}
+    })}catch(error){console.log(error);}
   }
 
 
