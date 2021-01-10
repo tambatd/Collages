@@ -28,11 +28,14 @@
     border-top-right-radius: 80px;
     padding-bottom: 2%;
 }
+.centeredsketch{
+    margin: auto;
+}
 
 @media screen and (max-width: 400px){
     .pics{
-        width: 100px;
-        height: 100px; 
+        width: 25px;
+        height: 25px; 
         border-radius: 25px;
     }
 }
@@ -40,7 +43,6 @@
     .pics{
         width: 500px;
         height: 500px; 
-        border-radius: 50%;
 
     }
 }

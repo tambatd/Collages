@@ -3,9 +3,12 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import * as $ from "jquery";
 import { authEndpoint, redirectUri, scopes } from "./config";
 import hash from "./hash";
+//import Slider, { Range } from 'rc-slider';
+//import 'rc-slider/assets/index.css';
+
 import Player from "./Player";
 import "./App.css";
-import find_liked from "./song_data";
+//import find_liked from "./song_data";
 import Typewriter from 'typewriter-effect';
 import ScrollAnimation from 'react-animate-on-scroll';
 import { SocialIcon } from 'react-social-icons';
@@ -52,6 +55,8 @@ class App extends Component {
       pictures: [],
       pictures2: [],
       pictures3: [],
+      yes: false,
+      no: true,
       is_playing: "Paused",
       progress_ms: 0,
       no_data: false,
@@ -63,12 +68,17 @@ class App extends Component {
       selectValue: null,
     };
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
+    this.gridchange= this.gridchange.bind(this);
     this.getCurrentlyPlaying = this.getCurrentlyPlaying.bind(this);
     this.getArtists = this.getArtists.bind(this);
   }
 
   handleDropdownChange(e) {
     this.setState({ selectValue: e.target.value });
+  }
+  gridchange(e){
+    this.setState({ grid: e.target.value });
+
   }
 
   handleChangeComplete = (color) => {
@@ -119,7 +129,8 @@ class App extends Component {
   }
 
   getArtists(token){ 
-    console.log(this.state.selectValue)
+    //console.log(this.state.selectValue)
+    try{
     $.ajax({
       url: "https://api.spotify.com/v1/me/top/artists?time_range="+"long_term",
       type: "get",
@@ -137,7 +148,7 @@ class App extends Component {
         let empty_list = [];
         let pic_list = [];
         let j;
-        console.log(list[0][1])
+        //console.log(list[0][1])
         for (j=0; j< 20; j++){
           empty_list.push(list[0][1][j]["genres"]);
           pic_list.push(list[0][1][j]["images"][0]["url"])
@@ -150,13 +161,14 @@ class App extends Component {
           artists: merged,
           pictures: pic_list
         });
-        let holder = find_liked(this.state.artists);
+        //let holder = find_liked(this.state.artists);
         this.setState({
-          song_recc: holder[0],
-          artist_recc: holder[1],
+          //song_recc: holder[0],
+          //artist_recc: holder[1],
         });
       }
-    })
+    })}catch(error){console.error(error);}
+    try{
     $.ajax({
       url: "https://api.spotify.com/v1/me/top/artists?time_range="+"short_term",
       type: "get",
@@ -186,15 +198,16 @@ class App extends Component {
           artists: merged,
           pictures2: pic_list
         });
-        let holder = find_liked(this.state.artists);
+        //let holder = find_liked(this.state.artists);
         this.setState({
-          song_recc: holder[0],
-          artist_recc: holder[1],
+          //song_recc: holder[0],
+         // artist_recc: holder[1],
         });
       }
-    })
+    })}catch(error){console.error(error);}
+    try{
     $.ajax({
-      url: "https://api.spotify.com/v1/me/top/artists?time_range="+"long_term",
+      url: "https://api.spotify.com/v1/me/top/artists?time_range="+"medium_term",
       type: "get",
       beforeSend: xhr => {
         xhr.setRequestHeader("Authorization", "Bearer " + token);
@@ -222,13 +235,13 @@ class App extends Component {
           artists: merged,
           pictures3: pic_list
         });
-        let holder = find_liked(this.state.artists);
+        //let holder = find_liked(this.state.artists);
         this.setState({
-          song_recc: holder[0],
-          artist_recc: holder[1],
+         // song_recc: holder[0],
+         // artist_recc: holder[1],
         });
       }
-    })
+    })}catch(error){console.error(error);}
   }
 
 
@@ -270,8 +283,7 @@ class App extends Component {
           <br></br>
         
           {this.state.token &&(
-           <div>
-              <ScrollAnimation animateIn='fadeIn' animateOut='flipOutY' scrollableParentSelector='#root'  animateOnce={true}>
+           <div className="centeredsketch">
              <div>
              <br/>  
              <br/>   
@@ -298,51 +310,62 @@ class App extends Component {
                 <div className="arrow-border">
                 <div className="arrow down"></div>
                 <div className='pulse'></div>
+               
                 </div>
                 </div>
                 {this.state.token &&(
-                <div style={{}}>
+                <div>
+                   <br/>
+                <br/>
+                <br/>
+                <div className="centeredsketch">
                   <SketchPicker
                   color={ this.state.background }
                   onChangeComplete={ this.handleChangeComplete }
                 />
-               
-                
-                  
+               </div>
+               <br/>
+
+               <h4>
+Drag from left to right to change song art shape            </h4>
                     
-                <RubberSlider width={250} value={this.state.setValue} onChange={this.setValue} />   
+                <Slider max={150} value={this.state.setValue} onChange={this.setValue} />   
                 <p>{this.state.setValue}</p>
                 </div>
               
                 )}
-                </ScrollAnimation>
               <br/>  
-            
+            <p>Top songs?</p>
               <select id="dropdown" onChange={this.handleDropdownChange}>
               <option value={this.state.pictures}>long_term</option>
               <option value={this.state.pictures3}>medium_term</option>
               <option value={this.state.pictures2}>short_term</option>
             </select>
+            <p>Snap to grid?</p>
+            <select id="dropdown" onChange={this.gridchange}>
+              <option value={this.state.yes}>Yes</option>
+              <option value={this.state.no}>No</option>
+            </select>
 
             
-            {this.state.selectValue != null &&(
-
-              <ScrollAnimation animateIn='fadeIn' animateOut='flipOutY' scrollableParentSelector='#root' animateOnce={true}>
-           
-              <br/> 
-            <div className="pics" style={{}}>
+          
+          </div>)}
+          {this.state.selectValue != null &&(
+            <div className="pics">
+              <br/>  
+              <br/>  
+              <br/>  
 
               {this.state.selectValue.split(",").map(long =>(
                       <Draggable>
-                      <img src={long} style={{borderRadius: this.state.setValue}} alt="Artist #1"></img>
+                        <img src={long} style={{borderRadius: this.state.setValue}} alt="Artist #1"></img>
                       </Draggable>
               ))}
               </div>
 
-              </ScrollAnimation>
+
               
               )}
-          </div>)}
 
         </header>
       </div>
