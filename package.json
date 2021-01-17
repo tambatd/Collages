@@ -19,6 +19,7 @@
     "react": "^16.8.4",
     "react-animate-on-scroll": "^2.1.5",
     "react-color": "^2.19.3",
+    "react-device-detect": "^1.15.0",
     "react-dom": "^16.8.4",
     "react-draggable": "^4.4.3",
     "react-native": "^0.63.4",

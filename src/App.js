@@ -25,7 +25,12 @@ import RubberSlider from "@shwilliam/react-rubber-slider";
 
 import "@shwilliam/react-rubber-slider/dist/styles.css";
 //import "./styles.css";
-
+import {
+  BrowserView,
+  MobileView,
+  isBrowser,
+  isMobile
+} from "react-device-detect";
 
 import "animate.css/animate.min.css";
 
@@ -153,6 +158,7 @@ class App extends Component {
          // empty_list.push(list[0][1][j]["genres"]);
           pic_list.push(list[0][1][j]["images"][0]["url"])
         }
+        console.log(pic_list);
         //let merged = [].concat.apply([], empty_list);
         //for(var i = 1 ; i < merged.length ; i++){
          // merged[i] = merged[i].charAt(0).toUpperCase() + merged[i].substr(1);
@@ -168,7 +174,7 @@ class App extends Component {
         });
       }
     })}catch(error){console.log(error);}
-    try{
+    /*try{
     $.ajax({
       url: "https://api.spotify.com/v1/me/top/artists?time_range="+"short_term",
       type: "get",
@@ -241,7 +247,7 @@ class App extends Component {
          // artist_recc: holder[1],
         });
       }
-    })}catch(error){console.log(error);}
+    })}catch(error){console.log(error);}*/
   }
 
 
@@ -250,6 +256,7 @@ class App extends Component {
     return (
       
       <div className="App" style={{backgroundColor: this.state.background, height: "100%", width: "100%"}}>
+        
         <header className="App-header">
           <div className="pink"> 
           <br/>
@@ -265,10 +272,17 @@ class App extends Component {
             <div>
            <p>Create beautiful collages via spotify</p>
             <br/>
+            <BrowserView>
+    <h4> This app only works on mobile :( </h4>
+</BrowserView>
+<MobileView>
+
             <a className="btn btn--loginApp-link"
               href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join("%20")}&response_type=token&show_dialog=false`}>
               Login to Spotify
             </a>
+            </MobileView>
+
             <br/>
             <br/>
             <div id="bar"></div>
@@ -298,9 +312,7 @@ class App extends Component {
               <h2>
                 Let's create some collages!
               </h2>
-              <h2>
-                Select a color to begin
-              </h2>
+              
               </div>
               <br/>
               <br/>
@@ -318,8 +330,13 @@ class App extends Component {
                    <br/>
                 <br/>
                 <br/>
+                <h2>
+                Select a color to begin
+              </h2>
+              <br/>
+
                 <div className="centeredsketch">
-                  <SketchPicker
+                  <SketchPicker width="100"
                   color={ this.state.background }
                   onChangeComplete={ this.handleChangeComplete }
                 />
@@ -327,37 +344,31 @@ class App extends Component {
                <br/>
 
                <h4>
-Drag from left to right to change song art shape            </h4>
+Drag to change art shape <br></br>        </h4>
                     
-                <Slider max={150} value={this.state.setValue} onChange={this.setValue} />   
-                <p>{this.state.setValue}</p>
+                <Slider max={40} value={this.state.setValue} onChange={this.setValue} />   
+                <br/>
+
+                <p> Drag to move art  </p>
+
                 </div>
               
                 )}
               <br/>  
-            <p>Top songs?</p>
-              <select id="dropdown" onChange={this.handleDropdownChange}>
-              <option value={this.state.pictures}>long_term</option>
-              <option value={this.state.pictures3}>medium_term</option>
-              <option value={this.state.pictures2}>short_term</option>
-            </select>
-            <p>Snap to grid?</p>
-            <select id="dropdown" onChange={this.gridchange}>
-              <option value={this.state.yes}>Yes</option>
-              <option value={this.state.no}>No</option>
-            </select>
+          
+         
 
             
           
           </div>)}
-          {this.state.selectValue != null &&(
+          {this.state.pictures != null &&(
             <div className="pics">
               <br/>  
-              <br/>  
-              <br/>  
+               
 
-              {this.state.selectValue.split(",").map(long =>(
-                      <Draggable>
+              {this.state.pictures.map(long =>(
+                      <Draggable         grid={[1, 1]}
+                      >
                         <img src={long} style={{borderRadius: this.state.setValue}} alt="Artist #1"></img>
                       </Draggable>
               ))}
@@ -382,3 +393,19 @@ const Main = props => (
 );
 
 export default Main;
+
+/*
+<p>Top songs?</p>
+<select id="dropdown" onChange={this.handleDropdownChange}>
+<option value={this.state.pictures}>long_term</option>
+<option value={this.state.pictures3}>medium_term</option>
+<option value={this.state.pictures2}>short_term</option>
+</select>
+
+
+   <p>Snap to grid?</p>
+            <select id="dropdown" onChange={this.gridchange}>
+              <option value={this.state.yes}>Yes</option>
+              <option value={this.state.no}>No</option>
+            </select>
+*/
